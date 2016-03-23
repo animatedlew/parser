@@ -1,5 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
-/// <reference path="../parser.ts" />
+/// <reference path="../src/parser.ts" />
 
 import { expect } from "chai";
 import Parser from "../src/parser";
