@@ -1,10 +1,8 @@
 /// <reference path="../typings/tsd.d.ts" />
 /// <reference path="../parser.ts" />
 
-import chai = require("chai");
-import parser = require("../parser");
-let expect = chai.expect;
-let Parser = parser.Parser; 
+import { expect } from "chai";
+import { Parser } from "../parser";
 
 describe("Parser", () => {    
     describe("#item", () => {
