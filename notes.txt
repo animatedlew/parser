@@ -1,0 +1,14 @@
+// hotkeys
+Find All References - Shift + F12
+Configure Task Runner - F1
+IntelliSense - Ctrl + Space
+Run Task - Ctrl + Shift + B
+Output Window - Ctrl + Shift + U
+Show Errors - Ctrl + Shift + M
+Navigate Symbols - Ctrl + Shift + O
+Search Symbols - Ctrl + T
+Format Code - Shift + Alt + F
+
+// adds definitions for unit tests
+tsd query mocha --save --action install
+tsd query chai --save --action install
