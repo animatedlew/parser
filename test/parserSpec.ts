@@ -2,7 +2,7 @@
 /// <reference path="../parser.ts" />
 
 import { expect } from "chai";
-import { Parser } from "../parser";
+import Parser from "../src/parser";
 
 describe("Parser", () => {    
     describe("#item", () => {

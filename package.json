@@ -4,6 +4,7 @@
   "description": "A monadic parser.",
   "main": "parser.js",
   "scripts": {
+    "start": "gulp run",
     "test": "gulp test"
   },
   "author": "lewis.moronta@gmail.com",
