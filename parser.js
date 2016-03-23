@@ -1,5 +1,4 @@
 "use strict";
-console.log("Monadic Parser");
 function identity(n) { return n; }
 var Parser = (function () {
     function Parser(f) {

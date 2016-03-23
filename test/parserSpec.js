@@ -1,5 +1,4 @@
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
+/// <reference path="../typings/tsd.d.ts" />
 /// <reference path="../parser.ts" />
 "use strict";
 var chai = require("chai");
