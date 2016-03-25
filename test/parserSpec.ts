@@ -192,8 +192,23 @@ describe("Parser", () => {
         it("should be a Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
-        it("should match words", () => {
+        it("should match up to non-letter", () => {
             expect(p.apply("Yes!")).to.have.deep.property("0.lexeme", "Yes");
+        });
+        it("should match words", () => {
+            let phrase = "What did the fox say?";
+            expect(
+                Parser.bind(
+                    Parser.word(),
+                    a => Parser.bind(
+                        Parser.word(),
+                        b => Parser.bind(
+                            Parser.word(),
+                            c => Parser.unit(`${a}${b}${c}`)
+                        )
+                    )
+                ).apply(phrase)
+            ).to.have.deep.property("0.lexeme", "What");
         });
     });
     describe("#string", () => {
@@ -201,9 +216,9 @@ describe("Parser", () => {
            expect(Parser.string("")).to.be.instanceof(Parser);
        });
        it("should match specific strings", () => {
-            let phrase = "What did the fox say?";
-            expect(Parser.string(phrase).apply("fox")).to.be.empty
-            expect(Parser.string(phrase).apply("What")).to.not.be.empty
+            let phrase = "dog";
+            expect(Parser.string(phrase).apply("fox")).to.have.deep.property("0.lexeme", "");
+            expect(Parser.string(phrase).apply("dog")).to.have.deep.property("0.lexeme", "dog");
         });
     });
 });
