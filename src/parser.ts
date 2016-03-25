@@ -62,5 +62,8 @@ export default class Parser<T> {
             Parser.unit("")
         );
     }
+    static many(p: Parser<string>): Parser<string> {
+        return Parser.plus(Parser.bind(p, x => Parser.bind(Parser.many(p), xs => Parser.unit(x + xs))), Parser.unit(""));
+    }
     apply = (input: string): Result<T>[] => this.f(input);
 }
