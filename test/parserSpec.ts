@@ -11,15 +11,15 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should consume only 1 char when input is non-empty", () => {
-            expect(p.run("test")).to.have.deep.property("0.lexeme", "t");
-            expect(p.run("test")).not.to.be.empty;
+            expect(p.apply("test")).to.have.deep.property("0.lexeme", "t");
+            expect(p.apply("test")).not.to.be.empty;
         });
         it("should return the unconsumed source", () => {
-            expect(p.run("test")).to.have.deep.property("0.source", "est");
-            expect(p.run("a")).to.have.deep.property("0.source", "");
+            expect(p.apply("test")).to.have.deep.property("0.source", "est");
+            expect(p.apply("a")).to.have.deep.property("0.source", "");
         });
         it("should fail if input is empty", () => {
-            expect(p.run("")).to.be.empty;
+            expect(p.apply("")).to.be.empty;
         });
     });
     describe("#zero", () => {
@@ -28,10 +28,10 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should fail on any input", () => {
-            expect(p.run("")).to.be.empty;
-            expect(p.run("a")).to.be.empty;
-            expect(p.run("ab")).to.be.empty;
-            expect(p.run("abc")).to.be.empty; 
+            expect(p.apply("")).to.be.empty;
+            expect(p.apply("a")).to.be.empty;
+            expect(p.apply("ab")).to.be.empty;
+            expect(p.apply("abc")).to.be.empty; 
         });        
     });
     describe("#unit", () => {
@@ -40,9 +40,9 @@ describe("Parser", () => {
         });
         it("should lift any value into a Parser monad", () => {
             let result = [{ lexeme: "", source: "abc"}];
-            expect(Parser.unit("").run("abc")).to.deep.equal(result);
+            expect(Parser.unit("").apply("abc")).to.deep.equal(result);
             result[0].lexeme = "x";
-            expect(Parser.unit("x").run("abc")).to.deep.equal(result);
+            expect(Parser.unit("x").apply("abc")).to.deep.equal(result);
         });        
     });
     describe("#bind", () => {
@@ -58,10 +58,10 @@ describe("Parser", () => {
         });
         it("should return a lexeme that skips the second character", () => {
             let result = [{ lexeme: "ac", source: ""}];
-            expect(p.run("abc")).to.deep.equal(result);
+            expect(p.apply("abc")).to.deep.equal(result);
         });
         it("should respect identity property", () => {
-            expect(Parser.bind(Parser.item(), Parser.unit).run("test")).to.eql(Parser.unit("t").run("est"))
+            expect(Parser.bind(Parser.item(), Parser.unit).apply("test")).to.eql(Parser.unit("t").apply("est"))
         });
     });
     describe("#sat", () => {
@@ -70,10 +70,10 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should pass on a positive predicate", () => {
-            expect(p.run("test")).to.not.be.empty;
+            expect(p.apply("test")).to.not.be.empty;
         });
         it("should fail on a negative predicate", () => {
-            expect(Parser.sat(() => false).run("test")).to.be.empty;
+            expect(Parser.sat(() => false).apply("test")).to.be.empty;
         });
     });
     describe("#char", () => {
@@ -82,10 +82,10 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should pass on a matched char", () => {
-            expect(p.run("abc")).to.not.be.empty;
+            expect(p.apply("abc")).to.not.be.empty;
         });
         it("should fail on a matched char", () => {
-            expect(p.run("cba")).to.be.empty;
+            expect(p.apply("cba")).to.be.empty;
         });
     });
     describe("#lower", () => {
@@ -100,21 +100,21 @@ describe("Parser", () => {
             expect(twolower).to.be.instanceof(Parser);
         });
         it("should pass on lower case letters", () => {
-            expect(p.run("a")).to.not.be.empty;
-            expect(p.run("b")).to.not.be.empty;
-            expect(p.run("c")).to.not.be.empty;
+            expect(p.apply("a")).to.not.be.empty;
+            expect(p.apply("b")).to.not.be.empty;
+            expect(p.apply("c")).to.not.be.empty;
         });
         it("should fail on upper case letters", () => {
-            expect(p.run("A")).to.be.empty;
-            expect(p.run("B")).to.be.empty;
-            expect(p.run("C")).to.be.empty;            
+            expect(p.apply("A")).to.be.empty;
+            expect(p.apply("B")).to.be.empty;
+            expect(p.apply("C")).to.be.empty;            
         });
         describe("twolower custom parser", () => {
             it("should consume two lower case letters", () => {
-                expect(twolower.run("abcd")).to.have.deep.property("0.lexeme", "ab");
+                expect(twolower.apply("abcd")).to.have.deep.property("0.lexeme", "ab");
             });
             it("should fail consuming a lower, followed by an upper", () => {
-                expect(twolower.run("aBcd")).to.be.empty;
+                expect(twolower.apply("aBcd")).to.be.empty;
             });            
         });
     });
@@ -124,14 +124,14 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should pass on upper case letters", () => {
-            expect(p.run("A")).to.not.be.empty;
-            expect(p.run("B")).to.not.be.empty;
-            expect(p.run("C")).to.not.be.empty;
+            expect(p.apply("A")).to.not.be.empty;
+            expect(p.apply("B")).to.not.be.empty;
+            expect(p.apply("C")).to.not.be.empty;
         });
         it("should fail on lower case letters", () => {
-            expect(p.run("a")).to.be.empty;
-            expect(p.run("b")).to.be.empty;
-            expect(p.run("c")).to.be.empty;            
+            expect(p.apply("a")).to.be.empty;
+            expect(p.apply("b")).to.be.empty;
+            expect(p.apply("c")).to.be.empty;            
         });
     });
     describe("#letter", () => {
@@ -140,12 +140,12 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should pass on a letter", () => {
-            expect(p.run("a")).to.not.be.empty;
-            expect(p.run("A")).to.not.be.empty;
+            expect(p.apply("a")).to.not.be.empty;
+            expect(p.apply("A")).to.not.be.empty;
         });
         it("should fail on a digit", () => {
-            expect(p.run("4")).to.be.empty;
-            expect(p.run("2")).to.be.empty;
+            expect(p.apply("4")).to.be.empty;
+            expect(p.apply("2")).to.be.empty;
         });
     });
     describe("#digit", () => {
@@ -154,23 +154,23 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should pass on a digit", () => {
-            expect(p.run("4")).to.not.be.empty;
-            expect(p.run("2")).to.not.be.empty;
+            expect(p.apply("4")).to.not.be.empty;
+            expect(p.apply("2")).to.not.be.empty;
         });
         it("should fail on a letter", () => {
-            expect(p.run("a")).to.be.empty;
-            expect(p.run("A")).to.be.empty;
+            expect(p.apply("a")).to.be.empty;
+            expect(p.apply("A")).to.be.empty;
         });
     });
     describe("#plus", () => {
         let p = Parser.plus(Parser.letter(), Parser.digit());
         it("should pass on letter or digit", () => {
-            expect(p.run("k")).to.not.be.empty
-            expect(p.run("9")).to.not.be.empty
+            expect(p.apply("k")).to.not.be.empty
+            expect(p.apply("9")).to.not.be.empty
         });
         it("should fail on special characters", () => {
-            expect(p.run("#")).to.be.empty
-            expect(p.run("!")).to.be.empty
+            expect(p.apply("#")).to.be.empty
+            expect(p.apply("!")).to.be.empty
         });
     });
     describe("#alphanum", () => {
@@ -179,12 +179,12 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should match a letter or digit", () => {
-            expect(p.run("k")).to.not.be.empty
-            expect(p.run("9")).to.not.be.empty
+            expect(p.apply("k")).to.not.be.empty
+            expect(p.apply("9")).to.not.be.empty
         });
         it("should fail on special characters", () => {
-            expect(p.run("#")).to.be.empty
-            expect(p.run("!")).to.be.empty
+            expect(p.apply("#")).to.be.empty
+            expect(p.apply("!")).to.be.empty
         });
     });
     describe("#word", () => {
@@ -193,7 +193,17 @@ describe("Parser", () => {
             expect(p).to.be.instanceof(Parser);
         });
         it("should match words", () => {
-            expect(p.run("Yes!")).to.have.deep.property("0.lexeme", "Yes");
+            expect(p.apply("Yes!")).to.have.deep.property("0.lexeme", "Yes");
+        });
+    });
+    describe("#string", () => {
+       it("should be a Parser", () => {
+           expect(Parser.string("")).to.be.instanceof(Parser);
+       });
+       it("should match specific strings", () => {
+            let phrase = "What did the fox say?";
+            expect(Parser.string(phrase).apply("fox")).to.be.empty
+            expect(Parser.string(phrase).apply("What")).to.not.be.empty
         });
     });
 });

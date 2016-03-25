@@ -14,12 +14,12 @@ export default class Parser<T> {
     static bind<T>(p: Parser<T>, f: LiftParser<T>): Parser<T> {
         return new Parser((input: string) => {
             // apply f to the lexeme while applying this.f on the source
-            let result = p.run(input).map(o => f(o.lexeme).run(o.source));
+            let result = p.apply(input).map(o => f(o.lexeme).apply(o.source));
             return result.reduce((b, a) => b.concat(a), []); // flatten
         });
     }
     static plus<T>(p1: Parser<T>, p2: Parser<T>): Parser<T> {
-        return new Parser((input: string) => p1.run(input).concat(p2.run(input)));
+        return new Parser((input: string) => p1.apply(input).concat(p2.apply(input)));
     }
     static item = () => new Parser((input: string) => {
             if (input.length) {
@@ -40,14 +40,27 @@ export default class Parser<T> {
     static letter = () => Parser.plus(Parser.lower(), Parser.upper());
     static alphanum = () => Parser.plus(Parser.letter(), Parser.digit());
     static word = (): Parser<string> => Parser.plus(
+        Parser.bind(
+            Parser.letter(),
+            x => Parser.bind(
+                Parser.word(),
+                xs => Parser.unit(x + xs)
+            )
+        ),
+        Parser.unit("")
+    );
+    static string = (input: string): Parser<string> => {
+        let [head, ...tail] = input.split("");
+        return Parser.plus(
             Parser.bind(
-                Parser.letter(),
+                Parser.char(head),
                 x => Parser.bind(
-                    Parser.word(),
+                    Parser.string(tail.join("")),
                     xs => Parser.unit(x + xs)
                 )
             ),
             Parser.unit("")
         );
-    run = (input: string): Result<T>[] => this.f(input);
+    }
+    apply = (input: string): Result<T>[] => this.f(input);
 }
