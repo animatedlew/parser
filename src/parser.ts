@@ -1,9 +1,6 @@
 /// <reference path="interfaces.ts" />
 import { Result, LiftParser, Predicate } from "./interfaces";
-
-let toInt = (input: string) => input.split("")
-    .map(n => n.charCodeAt(0) - "0".charCodeAt(0))
-    .reduce((m, n) => 10 * m + n);
+import { toInt, head } from "./parserUtils";
     
 export default class Parser<T> {
     constructor(private f: (input: string) => Result<T>[]) {}

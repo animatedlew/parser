@@ -1,8 +1,10 @@
 /// <reference path="../typings/tsd.d.ts" />
 /// <reference path="../src/parser.ts" />
+/// <reference path="../src/parserUtils.ts" />
 
 import { expect } from "chai";
 import Parser from "../src/parser";
+import { head, toInt } from "../src/parserUtils";
 
 describe("Parser", () => {    
     describe("#item", () => {
@@ -223,8 +225,8 @@ describe("Parser", () => {
     });
     describe("#many", () => {
         it("should parse a sequence of items", () => {
-            expect(Parser.many(Parser.char("a")).apply("aaaaabbb")).to.have.deep.property("0.lexeme.0", "a");
-            expect(Parser.many(Parser.char("b")).apply("bbaaa")).to.have.deep.property("0.lexeme.0", "b");
+            expect(head(Parser.many(Parser.char("a")).apply("aaaaabbb")).lexeme).to.have.length(5);
+            expect(head(Parser.many(Parser.char("b")).apply("bbaaa")).lexeme).to.have.length(2);
         });
     });
 });
