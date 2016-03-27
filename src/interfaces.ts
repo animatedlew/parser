@@ -10,8 +10,8 @@ export interface TypeIdentity<T> {
     (input: T): T
 }
 
-export interface LiftParser<T> {
-    (input: T): Parser<T>
+export interface LiftParser<A, B> {
+    (input: A): Parser<B>
 }
 
 export interface Predicate<T> {

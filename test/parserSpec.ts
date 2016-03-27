@@ -223,8 +223,8 @@ describe("Parser", () => {
     });
     describe("#many", () => {
         it("should parse a sequence of items", () => {
-            expect(Parser.many(Parser.char("a")).apply("aaaaabbb")).to.have.deep.property("0.lexeme", "aaaaa");
-            expect(Parser.many(Parser.char("b")).apply("bbaaa")).to.have.deep.property("0.lexeme", "bb");
+            expect(Parser.many(Parser.char("a")).apply("aaaaabbb")).to.have.deep.property("0.lexeme.0", "a");
+            expect(Parser.many(Parser.char("b")).apply("bbaaa")).to.have.deep.property("0.lexeme.0", "b");
         });
     });
 });
