@@ -88,10 +88,10 @@ export default class Parser<T> {
     }
     static ints() {
         let rep = Parser.many(Parser.bind(Parser.char(","),
-            _ => Parser.bind(Parser.alphanum(), // change to Parser.int()
+            _ => Parser.bind(Parser.int(),
             x => Parser.unit(x))));
         return Parser.bind(Parser.char("["),
-            _  => Parser.bind(Parser.alphanum(), // change to Parser.int()
+            _  => Parser.bind(Parser.int(),
             n  => Parser.bind(rep,
             ns => Parser.bind(Parser.char("]"),
             _  => Parser.unit(  ns.concat([n]).reverse()  )))));

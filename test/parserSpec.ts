@@ -228,5 +228,48 @@ describe("Parser", () => {
             expect(head(Parser.many(Parser.char("a")).apply("aaaaabbb")).lexeme).to.have.length(5);
             expect(head(Parser.many(Parser.char("b")).apply("bbaaa")).lexeme).to.have.length(2);
         });
+        it("should always succeed", () => {
+            expect(head(Parser.many(Parser.char("x")).apply("abc")).lexeme).to.have.length(0);
+            expect(head(Parser.many(Parser.char("a")).apply("xyz")).lexeme).to.have.length(0);            
+        });
+    });
+    describe("#many1", () => {
+        it("should fail when no match is found", () => {
+            expect(Parser.many1(Parser.char("x")).apply("abc")).to.be.empty
+            expect(Parser.many1(Parser.char("a")).apply("xyz")).to.be.empty            
+        });
+    });
+    describe("#nat", () => {
+        it("should only accept natural counting numbers", () => {
+            expect(Parser.nat().apply("1")).to.not.be.empty;
+            expect(Parser.nat().apply("-1")).to.be.empty;
+            for (let i = 0; i < 100; i++)
+                expect(Parser.nat().apply(i.toString())).to.not.be.empty; 
+        }); 
+    });
+    describe("#ident", () => {
+        it("should match valid identifiers", () => {
+            expect(Parser.ident().apply("123abc")).to.be.empty;
+            expect(Parser.ident().apply("abc123")).to.not.be.empty;
+            expect(Parser.ident().apply("A42")).to.not.be.empty; 
+        }); 
+    });
+    describe("#int", () => {
+        it("should accept integers", () => {
+            expect(Parser.int().apply("1")).to.not.be.empty;
+            expect(Parser.int().apply("-1")).to.not.be.empty;
+            for (let i = -50; i <= 50; i++)
+                expect(Parser.int().apply(i.toString())).to.not.be.empty;
+        });
+    });
+    describe("#ints", () => {
+       it("should parse an array of ints", () => {
+            expect(Parser.ints().apply("[1,2,-3,4,-5]")[0].lexeme).to.eql([1, 2, -3, 4, -5]); 
+       });
+       it("should fail on bad data", () => {
+            expect(Parser.ints().apply("[]")).to.be.empty;
+            expect(Parser.ints().apply("foo")).to.be.empty;
+            expect(Parser.ints().apply("[a,b,c]")).to.be.empty; 
+       }); 
     });
 });
