@@ -272,4 +272,10 @@ describe("Parser", () => {
             expect(Parser.ints().apply("[a,b,c]")).to.be.empty; 
        }); 
     });
+    describe("#sepby1", () => {
+        it("should throw away separators matched by sep parser", () => {
+            expect(head(Parser.sepby1(Parser.int(), Parser.char("|")).apply("1|2|3|4")).lexeme).to.eql([1, 2, 3, 4]);
+            expect(head(Parser.sepby1(Parser.letter(), Parser.char("@")).apply("a@b@c@d")).lexeme).to.eql(['a', 'b', 'c', 'd']); 
+        });
+    })
 });

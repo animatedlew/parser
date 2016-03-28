@@ -86,6 +86,15 @@ export default class Parser<T> {
             n => Parser.unit(-n))),
             Parser.nat());
     }
+    static sepby1<A, B>(p: Parser<A>, sep: Parser<B>): Parser<A[]> {
+        // [x:xs | x <- p, xs <- many [y | _ <- sep, y <- p]]
+        let skipSep = Parser.many(Parser.bind(sep,
+            _ => Parser.bind(p,
+            y => Parser.unit(y))));
+        return Parser.bind(p,
+            x => Parser.bind(skipSep,
+            xs => Parser.unit( xs.concat([x]).reverse() )));
+    }
     static ints() {
         let rep = Parser.many(Parser.bind(Parser.char(","),
             _ => Parser.bind(Parser.int(),
