@@ -95,7 +95,7 @@ export default class Parser<T> {
             x => Parser.bind(skipSep,
             xs => Parser.unit( xs.concat([x]).reverse() )));
     }
-    static ints() {
+    static _ints() {
         let rep = Parser.many(Parser.bind(Parser.char(","),
             _ => Parser.bind(Parser.int(),
             x => Parser.unit(x))));
@@ -104,6 +104,12 @@ export default class Parser<T> {
             n  => Parser.bind(rep,
             ns => Parser.bind(Parser.char("]"),
             _  => Parser.unit(  ns.concat([n]).reverse()  )))));
+    }
+    static ints() {
+        return Parser.bind(Parser.char("["),
+            _  => Parser.bind(Parser.sepby1(Parser.int(), Parser.char(",")),
+            ns => Parser.bind(Parser.char("]"),
+            _  => Parser.unit(ns))));
     }
     apply = (input: string): Result<T>[] => this.f(input);
 }
